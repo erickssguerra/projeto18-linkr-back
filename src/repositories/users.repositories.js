@@ -12,3 +12,7 @@ export function signUpUser(name, email, password, picture_url) {
     [name, email, password, picture_url]
   );
 }
+
+export function selectUserById(userId) {
+  return connectionDB.query(`SELECT id FROM users WHERE id=$1;`, [userId]);
+}
