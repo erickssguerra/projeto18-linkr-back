@@ -1,1 +1,0 @@
-const message = 'this file must be deleted after the first file is created into this folder'
