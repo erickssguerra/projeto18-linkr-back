@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import { signUpUser } from "../repositories/users.repositories.js";
 
 export async function postSignIn(req, res) {
   const id = res.locals.userId;
@@ -15,4 +16,10 @@ export async function postSignIn(req, res) {
     console.log(err);
     res.sendStatus(500);
   }
+}
+
+export async function postSignUp(req, res) {
+  const { name, picture_url, email, password } = res.locals.signUpValidated;
+  signUpUser(name, email, password, picture_url);
+  res.sendStatus(201);
 }
