@@ -1,7 +1,17 @@
 import { Router } from "express";
-import { getHashtags } from "../controllers/hash.controllers.js";
+import { getPosts, getHashtags } from "../controllers/hash.controllers.js";
+import { hashtagValidation } from "../middlewares/hashs/hashtagValidation.middleware.js";
+import { validateParams } from "../middlewares/schema.middleware.js";
+import { hashtagParamSchema } from "../schemas/hashtagParam.schema.js";
 
 const hashsRouter = Router();
+
+hashsRouter.get(
+  "/hashtag/:hashtag",
+  validateParams(hashtagParamSchema, "hashtag"),
+  hashtagValidation,
+  getPosts
+);
 
 hashsRouter.get("/hashtags", getHashtags);
 
