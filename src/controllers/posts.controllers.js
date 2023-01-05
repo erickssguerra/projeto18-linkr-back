@@ -21,3 +21,17 @@ export async function getPosts(req, res) {
     return res.sendStatus(500);
   };
 };
+
+export async function publishPost(req, res) {
+  const { userId, description, url, hashtagsArray } = req.body;
+
+  try {
+    const postId = await postRepository.publishPost(userId, description, url);
+
+    if (hashtagsArray.length > 0) await postRepository.insertHashtags(hashtagsArray, postId);
+
+    return res.sendStatus(201);
+  } catch (err) {
+    return res.status(500).send(err);
+  };
+};
