@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 import { signUpUser } from "../repositories/users.repositories.js";
 
 export async function postSignIn(req, res) {
-  const {id, picture_url} = res.locals.user;
+  const {id, picture_url, name} = res.locals.user;
 
   try {
     const userData = { userId: id };
@@ -13,7 +13,8 @@ export async function postSignIn(req, res) {
 
     const user = {
       token,
-      picture_url
+      picture_url,
+      name
     }
 
     res.status(200).send(user);

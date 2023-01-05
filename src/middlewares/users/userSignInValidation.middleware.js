@@ -23,8 +23,9 @@ export async function signInValidation(req, res, next) {
    
     const id = user.rows[0].id;
     const picture_url = user.rows[0].picture_url;
+    const name = user.rows[0].name;
 
-    res.locals.user = {id, picture_url};
+    res.locals.user = {id, picture_url, name};
   } catch (err) {
     console.log(err);
     res.sendStatus(500);
