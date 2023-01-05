@@ -23,7 +23,8 @@ export async function getPosts(req, res) {
 };
 
 export async function publishPost(req, res) {
-  const { userId, description, url, hashtagsArray } = req.body;
+  const { userId } = req.user;
+  const { url, description, hashtagsArray } = req.body;
 
   try {
     const postId = await postRepository.publishPost(userId, description, url);
