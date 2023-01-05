@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getPosts } from "../controllers/hash.controllers.js";
+import { getPosts, getHashtags } from "../controllers/hash.controllers.js";
 import { hashtagValidation } from "../middlewares/hashs/hashtagValidation.middleware.js";
 import { validateParams } from "../middlewares/schema.middleware.js";
 import { hashtagParamSchema } from "../schemas/hashtagParam.schema.js";
@@ -12,5 +12,7 @@ hashsRouter.get(
   hashtagValidation,
   getPosts
 );
+
+hashsRouter.get("/hashtags", getHashtags);
 
 export default hashsRouter;

@@ -3,7 +3,7 @@ import getMetaData from "metadata-scraper";
 import hashsRepositories from "../repositories/hashs.repositories.js";
 
 export async function getPosts(req, res) {
-  const hashId  = res.locals.hashId;
+  const hashId = res.locals.hashId;
 
   try {
     const postsData = await hashsRepositories.getPostsByHashId(hashId);
@@ -25,5 +25,20 @@ export async function getPosts(req, res) {
     return res.status(200).send(formattedData);
   } catch (e) {
     return res.sendStatus(500);
+  }
+}
+
+export async function getHashtags(req, res) {
+  try {
+    const hashtagsArray = await hashsRepositories.getHashtags();
+
+    hashtagsArray.forEach((hashtagInfo) => {
+      const hashtagName = hashtagInfo.name.split("#");
+      hashtagInfo.name = hashtagName[1];
+    });
+
+    return res.send(hashtagsArray);
+  } catch (err) {
+    return res.status(500).send(err);
   }
 }
