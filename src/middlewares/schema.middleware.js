@@ -12,6 +12,7 @@ function validate(schema, type, parameter) {
 
     if (error) {
       const erros = error.details.map((detail) => detail.message);
+      
       return res.status(422).send(erros);
     }
 
