@@ -14,10 +14,42 @@ async function getPosts() {
   );
 
   return rows;
-};
+}
+
+async function publishPost(userId, description, url) {
+  const { rows } = await connectionDB.query(
+    `
+    INSERT INTO
+      posts(user_id, description, url)
+    VALUES
+      ($1, $2, $3)
+    RETURNING
+      id;
+    `,
+    [userId, description, url]
+  );
+
+  return rows[0].id;
+}
+
+async function insertHashtags(hashtagsArray, postId) {
+  for (let i = 0; i < hashtagsArray.length; i++) {
+    await connectionDB.query(
+      `
+      INSERT INTO
+        hashs(name, post_id)
+      VALUES
+        ($1, $2);
+      `,
+      [hashtagsArray[i], postId]
+    );
+  };
+}
 
 const postRepository = {
-  getPosts
+  getPosts,
+  publishPost,
+  insertHashtags,
 };
 
 export default postRepository;
