@@ -38,7 +38,9 @@ async function getHashtags() {
     GROUP BY
         h.name
     ORDER BY
-        count DESC;
+        count DESC
+    LIMIT
+        10;
     `
   );
 
