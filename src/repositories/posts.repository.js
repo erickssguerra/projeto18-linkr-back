@@ -47,13 +47,34 @@ async function insertHashtags(hashtagsArray, postId) {
       `,
       [hashtagsArray[i], postId]
     );
-  };
+  }
+}
+
+async function getPostByIdAndUserId(post_id, userId) {
+  const { rows } = await connectionDB.query(
+    `SELECT * FROM posts WHERE id = $1 AND user_id = $2;
+      `,
+    [post_id, userId]
+  );
+
+  return rows;
+}
+
+async function deletePost(post_id) {
+  await connectionDB.query(
+    `
+    DELETE FROM posts WHERE id = $1;
+    `,
+    [post_id]
+  );
 }
 
 const postRepository = {
   getPosts,
   publishPost,
   insertHashtags,
+  getPostByIdAndUserId,
+  deletePost,
 };
 
 export default postRepository;
