@@ -8,6 +8,7 @@ async function getPosts() {
       posts.description,
       posts.url,
       users.name AS user,
+      users.id AS user_id,
       users.picture_url AS "userImage"
     FROM posts
     JOIN users ON posts.user_id = users.id
