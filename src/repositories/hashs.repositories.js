@@ -9,7 +9,7 @@ async function getHashByName(hashName) {
   return rows;
 }
 
-async function getPostsByHashId(hashId) {
+async function getPostsByHashName(hash_name) {
   const { rows } = await connectionDB.query(
     `SELECT
     posts.description AS description,
@@ -19,10 +19,10 @@ async function getPostsByHashId(hashId) {
     FROM posts
     INNER JOIN users ON posts.user_id=users.id
     INNER JOIN hashs ON posts.id=hashs.post_id
-    WHERE hashs.id=$1
+    WHERE hashs.name=$1
     ORDER BY posts.created_at DESC
    ;`,
-    [hashId]
+    [hash_name]
   );
 
   return rows;
@@ -49,7 +49,7 @@ async function getHashtags() {
 
 const hashsRepositories = {
   getHashByName,
-  getPostsByHashId,
+  getPostsByHashName,
   getHashtags,
 };
 
