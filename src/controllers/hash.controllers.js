@@ -3,10 +3,10 @@ import getMetaData from "metadata-scraper";
 import hashsRepositories from "../repositories/hashs.repositories.js";
 
 export async function getPosts(req, res) {
-  const hashId = res.locals.hashId;
+  const hash_name = res.locals.hashName;
 
   try {
-    const postsData = await hashsRepositories.getPostsByHashId(hashId);
+    const postsData = await hashsRepositories.getPostsByHashName(hash_name);
     const formattedData = await Promise.all(
       postsData.map(async (post) => {
         const metadata = await getMetaData(post.url);

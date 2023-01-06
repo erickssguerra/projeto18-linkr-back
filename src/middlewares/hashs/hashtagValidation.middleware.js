@@ -11,9 +11,9 @@ export async function hashtagValidation(req, res, next) {
     return res.sendStatus(404);
   }
 
-  const hashId = hash[0].id;
+  const hash_name = hash[0].name;
 
-  res.locals.hashId = hashId;
+  res.locals.hashName = hash_name;
   try {
   } catch (err) {
     console.log(err);
