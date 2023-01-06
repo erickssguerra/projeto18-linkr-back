@@ -16,7 +16,7 @@ import { postIdParamSchema } from "../schemas/postIdParam.schema.js";
 
 const router = Router();
 
-router.get("/timeline", getPosts);
+router.get("/timeline", authValidation, getPosts);
 router.post(
   "/timeline",
   authValidation,
