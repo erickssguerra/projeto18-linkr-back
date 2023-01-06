@@ -8,11 +8,12 @@ async function getPosts() {
       posts.description,
       posts.url,
       users.name AS user,
+      users.id AS user_id,
       users.picture_url AS "userImage"
     FROM posts
     JOIN users ON posts.user_id = users.id
     LEFT JOIN likes ON posts.id = likes.post_id
-    GROUP BY likes.post_id, posts.id, users.name, users.picture_url
+    GROUP BY likes.post_id, posts.id, users.name, users.picture_url, users.id
     ORDER BY posts.created_at DESC
     LIMIT 20;`
   );
