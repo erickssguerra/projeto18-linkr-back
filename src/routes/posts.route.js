@@ -7,7 +7,7 @@ import { postSchema } from "../schemas/post.schema.js";
 
 const router = Router();
 
-router.get("/timeline", getPosts);
+router.get("/timeline", authValidation, getPosts);
 router.post("/timeline", authValidation, validateBody(postSchema, "timeline"), publishPost);
 
 export default router;
