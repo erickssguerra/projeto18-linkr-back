@@ -20,12 +20,11 @@ export async function signInValidation(req, res, next) {
         .status(401)
         .send({ message: "Invalid email or password, please try again." });
     }
-   
+
     const id = user.rows[0].id;
     const picture_url = user.rows[0].picture_url;
-    const name = user.rows[0].name;
 
-    res.locals.user = {id, picture_url, name};
+    res.locals.user = { id, picture_url };
   } catch (err) {
     console.log(err);
     res.sendStatus(500);
