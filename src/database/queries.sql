@@ -28,8 +28,8 @@ CREATE TABLE "hashs"(
 	"created_at" TIMESTAMP DEFAULT NOW()
 );
 
-ALTER TABLE "hashs" ADD CONSTRAINT "fk_post_id" FOREIGN KEY ("post_id") REFERENCES "posts"("id");
 ALTER TABLE "hashs" ADD CONSTRAINT "chk_name0" CHECK ("name" NOT LIKE '% %');
+ALTER TABLE "hashs" ADD CONSTRAINT "fk_post_id" FOREIGN KEY ("post_id") REFERENCES "posts"("id") ON UPDATE CASCADE ON DELETE CASCADE;
 
 CREATE TABLE "likes"(
 	"id" SERIAL PRIMARY KEY NOT NULL,
@@ -38,6 +38,6 @@ CREATE TABLE "likes"(
 	"created_at" TIMESTAMP DEFAULT NOW()
 );
 
-ALTER TABLE "likes" ADD CONSTRAINT "fk_user_id" FOREIGN KEY ("user_id") REFERENCES "users"("id");
-ALTER TABLE "likes" ADD CONSTRAINT "fk_post_id" FOREIGN KEY ("post_id") REFERENCES "posts"("id");
+ALTER TABLE "likes" ADD CONSTRAINT "fk_user_id" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "likes" ADD CONSTRAINT "fk_post_id" FOREIGN KEY ("post_id") REFERENCES "posts"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
