@@ -35,6 +35,7 @@ export async function getPosts(req, res) {
   const user_id = res.locals.userId;
 
   try {
+    const user = await usersRepositories.selectUserInfosById(user_id);
     const postsData = await usersRepositories.getPostsByUserId(user_id);
     const formattedData = await Promise.all(
       postsData.map(async (post) => {
@@ -51,7 +52,12 @@ export async function getPosts(req, res) {
       })
     );
 
-    return res.status(200).send(formattedData);
+    const data = {
+      user: user[0],
+      formattedData,
+    };
+
+    return res.status(200).send(data);
   } catch (e) {
     return res.sendStatus(500);
   }
