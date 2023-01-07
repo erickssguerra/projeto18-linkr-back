@@ -24,6 +24,15 @@ async function selectUserById(userId) {
   return rows;
 }
 
+async function selectUserInfosById(userId) {
+  const { rows } = await connectionDB.query(
+    `SELECT name, picture_url FROM users WHERE id=$1;`,
+    [userId]
+  );
+
+  return rows;
+}
+
 async function getPostsByUserId(user_id) {
   const { rows } = await connectionDB.query(
     `SELECT
@@ -35,7 +44,7 @@ async function getPostsByUserId(user_id) {
       users.id AS user_id,
       users.picture_url AS "userImage"
     FROM posts
-    JOIN users ON posts.user_id = users.id
+    LEFT JOIN users ON posts.user_id = users.id
     LEFT JOIN likes ON posts.id = likes.post_id
     WHERE users.id=$1
     GROUP BY likes.post_id, posts.id, users.name, users.picture_url, users.id
@@ -50,6 +59,7 @@ const usersRepositories = {
   selectUserByEmail,
   signUpUser,
   selectUserById,
+  selectUserInfosById,
   getPostsByUserId,
 };
 
