@@ -53,3 +53,23 @@ export async function deletePost(req, res) {
     return res.status(500).send(err);
   }
 }
+
+export async function updatePost(req, res) {
+  const {
+    description,
+    removedHashtags,
+    newHashtags,
+    post_id } = req.body;
+
+    console.log(req.body);
+  
+  try {
+    await postRepository.deleteHashtags(removedHashtags, post_id);
+    await postRepository.insertHashtags(newHashtags, post_id);
+    await postRepository.updatePost(description, post_id);
+
+    return res.sendStatus(203);
+  } catch (e) {
+    return res.status(500).send(e);
+  };
+};

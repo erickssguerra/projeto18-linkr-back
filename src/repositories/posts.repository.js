@@ -39,6 +39,9 @@ async function publishPost(userId, description, url) {
 
 async function insertHashtags(hashtagsArray, postId) {
   for (let i = 0; i < hashtagsArray.length; i++) {
+    if (hashtagsArray[i] === '#')
+      return;
+      
     await connectionDB.query(
       `
       INSERT INTO
@@ -50,6 +53,21 @@ async function insertHashtags(hashtagsArray, postId) {
     );
   }
 }
+
+async function deleteHashtags(hashtagsArray, postId) {
+  hashtagsArray.forEach(async (hashtag) => {
+    await connectionDB.query(
+      `
+      DELETE FROM
+        hashs
+      WHERE
+        "name"=$1
+      AND
+        "post_id"=$2
+      `, [hashtag, postId]
+    )
+  });
+};
 
 async function getPostByIdAndUserId(post_id, userId) {
   const { rows } = await connectionDB.query(
@@ -70,12 +88,27 @@ async function deletePost(post_id) {
   );
 }
 
+async function updatePost(description, post_id) {
+  await connectionDB.query(
+    `
+    UPDATE
+      posts
+    SET 
+      description=$1
+    WHERE
+      "id"=$2
+    `, [description, post_id]
+  );
+};
+
 const postRepository = {
   getPosts,
   publishPost,
   insertHashtags,
   getPostByIdAndUserId,
   deletePost,
+  deleteHashtags,
+  updatePost
 };
 
 export default postRepository;
