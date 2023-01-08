@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import { signUpUser } from "../repositories/users.repositories.js";
+import { signUpUser, selectUsersByString } from "../repositories/users.repositories.js";
 
 export async function postSignIn(req, res) {
   const { id, picture_url } = res.locals.user;
@@ -29,3 +29,15 @@ export async function postSignUp(req, res) {
   signUpUser(name, email, password, picture_url);
   res.sendStatus(201);
 }
+
+export async function getUsers(req, res) {
+  const { string } = req.params;
+  
+  try {
+    const users = await selectUsersByString(string);
+
+    return res.status(200).send(users);
+  } catch (e) {
+    return res.status(500).send(e);
+  };
+};

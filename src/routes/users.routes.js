@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { postSignIn, postSignUp } from "../controllers/users.controllers.js";
+import { getUsers, postSignIn, postSignUp } from "../controllers/users.controllers.js";
 import { validateBody } from "../middlewares/schema.middleware.js";
 import { signInValidation } from "../middlewares/users/userSignInValidation.middleware.js";
 import { signUpValidation } from "../middlewares/users/userSignUpValidation.middleware.js";
@@ -19,6 +19,10 @@ usersRouter.post(
   validateBody(signUpSchema, "signUp"),
   signUpValidation,
   postSignUp
+);
+usersRouter.get(
+  '/user/:string',
+  getUsers
 );
 
 export default usersRouter;
