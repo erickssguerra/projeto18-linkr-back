@@ -3,18 +3,23 @@ import connectionDB from "../database/connectionDB.js";
 async function getPosts() {
   const { rows } = await connectionDB.query(
     `SELECT
-      COALESCE(COUNT(likes.post_id),0) AS likes,
-      posts.id AS post_id,
-      posts.description,
-      posts.url,
-      users.name AS user,
-      users.picture_url AS "userImage"
-    FROM posts
-    JOIN users ON posts.user_id = users.id
-    LEFT JOIN likes ON posts.id = likes.post_id
-    GROUP BY likes.post_id, posts.id, users.name, users.picture_url
-    ORDER BY posts.created_at DESC
-    LIMIT 20;`
+        COALESCE (ARRAY_AGG( JSON_BUILD_OBJECT (
+            'user_name',  users2.name,
+            'user_id', users2.id
+            )) FILTER (WHERE users2.id IS NOT NULL), ARRAY[]::json[]) 
+            AS likes,
+        posts.id,
+        posts.description,
+        posts.url,
+        users.name AS user,
+        users.picture_url AS "userImage"
+      FROM posts
+      JOIN users ON posts.user_id = users.id
+      LEFT JOIN likes ON posts.id = likes.post_id
+      LEFT JOIN users AS users2 ON users2.id = likes.user_id 
+      GROUP BY posts.id, users.name, users.picture_url
+      ORDER BY posts.created_at DESC
+      LIMIT 20;`
   );
 
   return rows;
@@ -69,12 +74,28 @@ async function deletePost(post_id) {
   );
 }
 
+async function checkPost(post_id) {
+  const { rows } = await connectionDB.query(
+    `SELECT CASE WHEN EXISTS (
+      SELECT *
+      FROM posts
+      WHERE posts.id = $1
+    )
+    THEN CAST(1 AS BIT)
+    ELSE CAST(0 AS BIT) END;`,
+    [post_id]
+  );
+  const answer = Boolean(Number(rows[0].case));
+  return answer;
+}
+
 const postRepository = {
   getPosts,
   publishPost,
   insertHashtags,
   getPostByIdAndUserId,
   deletePost,
+  checkPost,
 };
 
 export default postRepository;
