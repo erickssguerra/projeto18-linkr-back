@@ -9,6 +9,7 @@ async function getPosts() {
             )) FILTER (WHERE users2.id IS NOT NULL), ARRAY[]::json[]) 
             AS likes,
         posts.id,
+        posts.user_id,
         posts.description,
         posts.url,
         users.name AS user,
@@ -17,7 +18,7 @@ async function getPosts() {
       JOIN users ON posts.user_id = users.id
       LEFT JOIN likes ON posts.id = likes.post_id
       LEFT JOIN users AS users2 ON users2.id = likes.user_id 
-      GROUP BY posts.id, users.name, users.picture_url
+      GROUP BY posts.id, users.name, users.picture_url, posts.user_id
       ORDER BY posts.created_at DESC
       LIMIT 20;`
   );
