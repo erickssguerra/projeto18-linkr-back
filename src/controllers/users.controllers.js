@@ -62,3 +62,15 @@ export async function getPosts(req, res) {
     return res.sendStatus(500);
   }
 }
+
+export async function getUsers(req, res) {
+  const { string } = req.params;
+  
+  try {
+    const users = await usersRepositories.selectUsersByString(string);
+
+    return res.status(200).send(users);
+  } catch (e) {
+    return res.status(500).send(e);
+  };
+};

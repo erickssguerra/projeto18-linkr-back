@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getPosts, postSignIn, postSignUp } from "../controllers/users.controllers.js";
+import { getUsers, getPosts, postSignIn, postSignUp } from "../controllers/users.controllers.js";
 import { authValidation } from "../middlewares/authValidation.middleware.js";
 import { validateBody, validateParams } from "../middlewares/schema.middleware.js";
 import { signInValidation } from "../middlewares/users/userSignInValidation.middleware.js";
@@ -29,6 +29,10 @@ usersRouter.get(
   validateParams(userIdParamSchema, "id"),
   userValidation,
   getPosts
+);
+usersRouter.get(
+  '/user/search/:string',
+  getUsers
 );
 
 export default usersRouter;

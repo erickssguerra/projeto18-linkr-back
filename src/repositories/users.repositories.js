@@ -55,12 +55,35 @@ async function getPostsByUserId(user_id) {
   return rows;
 }
 
+async function selectUsersByString(string) {
+  const { rows } = await connectionDB.query(
+    `
+    SELECT 
+      id,
+      "name",
+      picture_url
+    FROM
+      users
+    WHERE
+      "name"
+    LIKE
+      $1
+    ORDER BY
+      "name"
+    LIMIT 10
+    `, [`%${string}%`]
+  );
+
+  return rows;
+};
+
 const usersRepositories = {
   selectUserByEmail,
   signUpUser,
   selectUserById,
   selectUserInfosById,
   getPostsByUserId,
+  selectUsersByString
 };
 
 export default usersRepositories;
