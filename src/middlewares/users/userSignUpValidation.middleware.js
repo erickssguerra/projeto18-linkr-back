@@ -1,11 +1,11 @@
 import bcrypt from "bcrypt";
-import { selectUserByEmail } from "../../repositories/users.repositories.js";
+import usersRepositories from "../../repositories/users.repositories.js";
 
 export async function signUpValidation(req, res, next) {
   const { email, password, name, picture_url } = res.locals.signUp;
 
   try {
-    const user = await selectUserByEmail(email);
+    const user = await usersRepositories.selectUserByEmail(email);
 
     if (user.rowCount) {
       return res.status(401).send({ message: "Email already registered!" });
