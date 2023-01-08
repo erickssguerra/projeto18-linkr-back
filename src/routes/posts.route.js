@@ -4,9 +4,11 @@ import {
   deletePost,
   getPosts,
   publishPost,
+  updatePost,
 } from "../controllers/posts.controllers.js";
 import { authValidation } from "../middlewares/authValidation.middleware.js";
 import { deletePostValidation } from "../middlewares/posts/deletePostValidation.middleware.js";
+import { updatePostValidation } from "../middlewares/posts/updatePostValidation.middleware.js";
 import {
   validateBody,
   validateParams,
@@ -29,6 +31,13 @@ router.delete(
   validateParams(postIdParamSchema, "post_id"),
   deletePostValidation,
   deletePost
+);
+router.put(
+  '/timeline/:post_id',
+  authValidation,
+  validateParams(postIdParamSchema, 'post_id'),
+  updatePostValidation,
+  updatePost
 );
 
 export default router;

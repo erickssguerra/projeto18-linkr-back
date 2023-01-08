@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
-import { signUpUser } from "../repositories/users.repositories.js";
+import usersRepositories from "../repositories/users.repositories.js";
+import getMetaData from "metadata-scraper";
 
 export async function postSignIn(req, res) {
   const { id, picture_url } = res.locals.user;
@@ -26,6 +27,38 @@ export async function postSignIn(req, res) {
 
 export async function postSignUp(req, res) {
   const { name, picture_url, email, password } = res.locals.signUpValidated;
-  signUpUser(name, email, password, picture_url);
+  usersRepositories.signUpUser(name, email, password, picture_url);
   res.sendStatus(201);
+}
+
+export async function getPosts(req, res) {
+  const user_id = res.locals.userId;
+
+  try {
+    const user = await usersRepositories.selectUserInfosById(user_id);
+    const postsData = await usersRepositories.getPostsByUserId(user_id);
+    const formattedData = await Promise.all(
+      postsData.map(async (post) => {
+        const metadata = await getMetaData(post.url);
+
+        return {
+          ...post,
+          metadata: {
+            icon: metadata.icon,
+            title: metadata.title,
+            description: metadata.description,
+          },
+        };
+      })
+    );
+
+    const data = {
+      user: user[0],
+      formattedData,
+    };
+
+    return res.status(200).send(data);
+  } catch (e) {
+    return res.sendStatus(500);
+  }
 }

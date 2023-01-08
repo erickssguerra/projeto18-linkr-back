@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import { selectUserById } from "../repositories/users.repositories.js";
+import usersRepositories from "../repositories/users.repositories.js";
 
 export async function authValidation(req, res, next) {
   const { authorization } = req.headers;
@@ -17,9 +17,9 @@ export async function authValidation(req, res, next) {
       }
       const { userId } = decoded;
 
-      const userExists = await selectUserById(userId);
+      const userExists = await usersRepositories.selectUserById(userId);
 
-      if (userExists.rows.length === 0) {
+      if (userExists.length === 0) {
         return res.sendStatus(401);
       }
 
