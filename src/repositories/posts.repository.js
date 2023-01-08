@@ -93,6 +93,18 @@ async function deletePost(post_id) {
   );
 }
 
+async function updatePost(description, post_id) {
+  await connectionDB.query(
+    `
+    UPDATE
+      posts
+    SET 
+      description=$1
+    WHERE
+      "id"=$2
+    `, [description, post_id]
+  );
+};
 
 async function checkPost(post_id) {
   const { rows } = await connectionDB.query(
@@ -108,20 +120,6 @@ async function checkPost(post_id) {
   const answer = Boolean(Number(rows[0].case));
   return answer;
 }
-
-async function updatePost(description, post_id) {
-  await connectionDB.query(
-    `
-    UPDATE
-      posts
-    SET 
-      description=$1
-    WHERE
-      "id"=$2
-    `, [description, post_id]
-  );
-};
-
 
 const postRepository = {
   getPosts,
