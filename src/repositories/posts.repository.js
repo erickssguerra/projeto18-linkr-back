@@ -8,17 +8,17 @@ async function getPosts() {
             'user_id', users2.id
             )) FILTER (WHERE users2.id IS NOT NULL), ARRAY[]::json[]) 
             AS likes,
-        posts.id,
-        posts.user_id,
+        posts.id AS post_id,
         posts.description,
         posts.url,
         users.name AS user,
+        users.id AS user_id,
         users.picture_url AS "userImage"
       FROM posts
       JOIN users ON posts.user_id = users.id
       LEFT JOIN likes ON posts.id = likes.post_id
       LEFT JOIN users AS users2 ON users2.id = likes.user_id 
-      GROUP BY posts.id, users.name, users.picture_url, posts.user_id
+      GROUP BY posts.id, users.name, users.picture_url, users.id
       ORDER BY posts.created_at DESC
       LIMIT 20;`
   );
@@ -44,9 +44,8 @@ async function publishPost(userId, description, url) {
 
 async function insertHashtags(hashtagsArray, postId) {
   for (let i = 0; i < hashtagsArray.length; i++) {
-    if (hashtagsArray[i] === '#')
-      return;
-      
+    if (hashtagsArray[i] === "#") return;
+
     await connectionDB.query(
       `
       INSERT INTO
@@ -69,10 +68,11 @@ async function deleteHashtags(hashtagsArray, postId) {
         "name"=$1
       AND
         "post_id"=$2
-      `, [hashtag, postId]
-    )
+      `,
+      [hashtag, postId]
+    );
   });
-};
+}
 
 async function getPostByIdAndUserId(post_id, userId) {
   const { rows } = await connectionDB.query(
@@ -102,9 +102,10 @@ async function updatePost(description, post_id) {
       description=$1
     WHERE
       "id"=$2
-    `, [description, post_id]
+    `,
+    [description, post_id]
   );
-};
+}
 
 async function checkPost(post_id) {
   const { rows } = await connectionDB.query(
@@ -129,7 +130,7 @@ const postRepository = {
   deletePost,
   checkPost,
   deleteHashtags,
-  updatePost
+  updatePost,
 };
 
 export default postRepository;
