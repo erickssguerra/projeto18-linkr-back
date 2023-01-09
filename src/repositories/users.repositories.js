@@ -66,7 +66,7 @@ async function selectUsersByString(string) {
       users
     WHERE
       "name"
-    LIKE
+    ILIKE
       $1
     ORDER BY
       "name"
