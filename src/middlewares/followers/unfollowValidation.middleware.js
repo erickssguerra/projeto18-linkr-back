@@ -3,23 +3,23 @@ import usersRepositories from "../../repositories/users.repositories.js";
 
 export async function unfollowValidation(req, res, next) {
   const { userId } = req.user;
-  const { id } = res.locals.followerId;
-  const followerId = parseInt(id);
+  const { id } = res.locals.followedId;
+  const followedId = parseInt(id);
 
   try {
-    if (userId === followerId) {
+    if (userId === followedId) {
       return res.status(500).send({ message: "You can't unfollow yourself" });
     }
 
-    const followerExists = await usersRepositories.selectUserById(followerId);
+    const followedExists = await usersRepositories.selectUserById(followedId);
 
-    if (followerExists.length === 0) {
+    if (followedExists.length === 0) {
       return res.status(404).send({ message: "User not found!" });
     }
 
     const followers = await followersRepositories.getFollowersById(
       userId,
-      followerId
+      followedId
     );
   
     if (followers[0].count === "0") {

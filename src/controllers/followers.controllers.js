@@ -21,13 +21,13 @@ export async function getFollowers(req, res) {
 
 export async function getFollowersById(req, res) {
   const { userId } = req.user;
-  const { id } = res.locals.followerId;
-  const followerId = parseInt(id);
+  const { id } = res.locals.followedId;
+  const followedId = parseInt(id);
 
   try {
     const followers = await followersRepositories.getFollowersById(
       userId,
-      followerId
+      followedId
     );
 
     let isFollowing;
@@ -47,11 +47,11 @@ export async function getFollowersById(req, res) {
 
 export async function postFollowers(req, res) {
   const { userId } = req.user;
-  const { id } = res.locals.followerId;
-  const followerId = parseInt(id);
+  const { id } = res.locals.followedId;
+  const followedId = parseInt(id);
 
   try {
-    await followersRepositories.postFollowers(userId, followerId);
+    await followersRepositories.postFollowers(userId, followedId);
 
     res.sendStatus(201);
   } catch (err) {
@@ -62,11 +62,11 @@ export async function postFollowers(req, res) {
 
 export async function deleteFollowers(req, res) {
   const { userId } = req.user;
-  const { id } = res.locals.followerId;
-  const followerId = parseInt(id);
+  const { id } = res.locals.followedId;
+  const followedId = parseInt(id);
 
   try {
-    await followersRepositories.deleteFollowers(userId, followerId);
+    await followersRepositories.deleteFollowers(userId, followedId);
 
     res.sendStatus(204);
   } catch (err) {

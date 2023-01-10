@@ -9,7 +9,7 @@ import { authValidation } from "../middlewares/authValidation.middleware.js";
 import { followValidation } from "../middlewares/followers/followValidation.middleware.js";
 import { unfollowValidation } from "../middlewares/followers/unfollowValidation.middleware.js";
 import { validateParams } from "../middlewares/schema.middleware.js";
-import { followerIdParamSchema } from "../schemas/followerIdParam.schema.js";
+import { followedIdParamSchema } from "../schemas/followedIdParam.schema.js";
 
 const followersRouter = Router();
 
@@ -18,14 +18,14 @@ followersRouter.get("/followers", authValidation, getFollowers);
 followersRouter.get(
   "/followers/:id",
   authValidation,
-  validateParams(followerIdParamSchema, "followerId"),
+  validateParams(followedIdParamSchema, "followedId"),
   getFollowersById
 );
 
 followersRouter.post(
   "/followers/:id",
   authValidation,
-  validateParams(followerIdParamSchema, "followerId"),
+  validateParams(followedIdParamSchema, "followedId"),
   followValidation,
   postFollowers
 );
@@ -33,7 +33,7 @@ followersRouter.post(
 followersRouter.delete(
   "/followers/:id",
   authValidation,
-  validateParams(followerIdParamSchema, "followerId"),
+  validateParams(followedIdParamSchema, "followedId"),
   unfollowValidation,
   deleteFollowers
 );

@@ -1,5 +1,5 @@
 import Joi from "joi";
 
-export const followerIdParamSchema = Joi.object({
+export const followedIdParamSchema = Joi.object({
   id: Joi.number().integer().required(),
 });
