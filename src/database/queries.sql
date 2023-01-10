@@ -40,6 +40,38 @@ CREATE TABLE "likes"(
 	"created_at" TIMESTAMP DEFAULT NOW()
 );
 
-ALTER TABLE "likes" ADD CONSTRAINT "fk_user_id" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-ALTER TABLE "likes" ADD CONSTRAINT "fk_post_id" FOREIGN KEY ("post_id") REFERENCES "posts"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "likes" ADD CONSTRAINT "fk_user_id" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE;
+ALTER TABLE "likes" ADD CONSTRAINT "fk_post_id" FOREIGN KEY ("post_id") REFERENCES "posts"("id") ON DELETE CASCADE;
 
+CREATE TABLE "followers"(
+	"id" SERIAL PRIMARY KEY NOT NULL,
+	"user_id" INTEGER NOT NULL,
+	"follower_id" INTEGER NOT NULL,
+	"created_at" TIMESTAMP DEFAULT NOW ()
+);
+
+ALTER TABLE "followers" ADD CONSTRAINT "fk_user_id" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE;
+ALTER TABLE "followers" ADD CONSTRAINT "fk_follower_id" FOREIGN KEY ("follower_id") REFERENCES "users"("id") ON DELETE CASCADE;
+ALTER TABLE "followers" ADD CONSTRAINT "chk_user_follower" CHECK ("user_id" <> "follower_id");
+ALTER TABLE "followers" ADD CONSTRAINT "unique_user_follower" UNIQUE ("user_id", "follower_id");
+
+CREATE TABLE "comments"(
+	"id" SERIAL PRIMARY KEY NOT NULL,
+	"user_id" INTEGER NOT NULL,
+	"post_id" INTEGER NOT NULL,
+	"comment" TEXT NOT NULL,
+	"created_at" TIMESTAMP DEFAULT NOW ()
+);
+
+ALTER TABLE "comments" ADD CONSTRAINT "fk_user_id" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE;
+ALTER TABLE "comments" ADD CONSTRAINT "fk_post_id" FOREIGN KEY ("post_id") REFERENCES "posts"("id") ON DELETE CASCADE;
+
+CREATE TABLE "reposts"(
+	"id" SERIAL PRIMARY KEY NOT NULL,
+	"user_id" INTEGER NOT NULL,
+	"post_id" INTEGER NOT NULL,
+	"created_at" TIMESTAMP DEFAULT NOW ()
+);
+
+ALTER TABLE "reposts" ADD CONSTRAINT "fk_user_id" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE;
+ALTER TABLE "reposts" ADD CONSTRAINT "fk_post_id" FOREIGN KEY ("post_id") REFERENCES "posts"("id") ON DELETE CASCADE;
