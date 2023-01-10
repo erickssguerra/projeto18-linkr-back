@@ -59,3 +59,18 @@ export async function postFollowers(req, res) {
     res.sendStatus(500);
   }
 }
+
+export async function deleteFollowers(req, res) {
+  const { userId } = req.user;
+  const { id } = res.locals.followerId;
+  const followerId = parseInt(id);
+
+  try {
+    await followersRepositories.deleteFollowers(userId, followerId);
+
+    res.sendStatus(204);
+  } catch (err) {
+    console.log(err);
+    res.sendStatus(500);
+  }
+}

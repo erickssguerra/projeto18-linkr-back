@@ -33,10 +33,20 @@ async function postFollowers(userId, followerId) {
   );
 }
 
+async function deleteFollowers(userId, followerId) {
+  return await connectionDB.query(
+    `DELETE 
+        FROM followers 
+      WHERE user_id = $1 AND follower_id = $2;`,
+    [userId, followerId]
+  );
+}
+
 const followersRepositories = {
   getFollowers,
   getFollowersById,
   postFollowers,
+  deleteFollowers,
 };
 
 export default followersRepositories;
