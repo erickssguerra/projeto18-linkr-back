@@ -18,3 +18,28 @@ export async function getFollowers(req, res) {
     res.sendStatus(500);
   }
 }
+
+export async function getFollowersById(req, res) {
+  const { userId } = req.user;
+  const { followerId } = res.locals.followerId;
+
+  try {
+    const followers = await followersRepositories.getFollowersById(
+      userId,
+      followerId
+    );
+
+    let isFollowing;
+
+    if (followers[0].count === "0") {
+      isFollowing = false;
+    } else {
+      isFollowing = true;
+    }
+
+    res.status(200).send(isFollowing);
+  } catch (err) {
+    console.log(err);
+    res.sendStatus(500);
+  }
+}
