@@ -46,14 +46,14 @@ ALTER TABLE "likes" ADD CONSTRAINT "fk_post_id" FOREIGN KEY ("post_id") REFERENC
 CREATE TABLE "followers"(
 	"id" SERIAL PRIMARY KEY NOT NULL,
 	"user_id" INTEGER NOT NULL,
-	"follower_id" INTEGER NOT NULL,
+	"followed_id" INTEGER NOT NULL,
 	"created_at" TIMESTAMP DEFAULT NOW ()
 );
 
 ALTER TABLE "followers" ADD CONSTRAINT "fk_user_id" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE;
-ALTER TABLE "followers" ADD CONSTRAINT "fk_follower_id" FOREIGN KEY ("follower_id") REFERENCES "users"("id") ON DELETE CASCADE;
-ALTER TABLE "followers" ADD CONSTRAINT "chk_user_follower" CHECK ("user_id" <> "follower_id");
-ALTER TABLE "followers" ADD CONSTRAINT "unique_user_follower" UNIQUE ("user_id", "follower_id");
+ALTER TABLE "followers" ADD CONSTRAINT "fk_followed_id" FOREIGN KEY ("followed_id") REFERENCES "users"("id") ON DELETE CASCADE;
+ALTER TABLE "followers" ADD CONSTRAINT "chk_user_follower" CHECK ("user_id" <> "followed_id");
+ALTER TABLE "followers" ADD CONSTRAINT "unique_user_follower" UNIQUE ("user_id", "followed_id");
 
 CREATE TABLE "comments"(
 	"id" SERIAL PRIMARY KEY NOT NULL,
