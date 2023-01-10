@@ -24,9 +24,19 @@ async function getFollowersById(userId, followerId) {
   return rows;
 }
 
+async function postFollowers(userId, followerId) {
+  return await connectionDB.query(
+    `INSERT INTO
+        followers (user_id, follower_id)
+      VALUES ($1, $2);`,
+    [userId, followerId]
+  );
+}
+
 const followersRepositories = {
   getFollowers,
   getFollowersById,
+  postFollowers,
 };
 
 export default followersRepositories;

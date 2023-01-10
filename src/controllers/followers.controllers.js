@@ -21,7 +21,8 @@ export async function getFollowers(req, res) {
 
 export async function getFollowersById(req, res) {
   const { userId } = req.user;
-  const { followerId } = res.locals.followerId;
+  const { id } = res.locals.followerId;
+  const followerId = parseInt(id);
 
   try {
     const followers = await followersRepositories.getFollowersById(
@@ -38,6 +39,21 @@ export async function getFollowersById(req, res) {
     }
 
     res.status(200).send(isFollowing);
+  } catch (err) {
+    console.log(err);
+    res.sendStatus(500);
+  }
+}
+
+export async function postFollowers(req, res) {
+  const { userId } = req.user;
+  const { id } = res.locals.followerId;
+  const followerId = parseInt(id);
+
+  try {
+    await followersRepositories.postFollowers(userId, followerId);
+
+    res.sendStatus(201);
   } catch (err) {
     console.log(err);
     res.sendStatus(500);
