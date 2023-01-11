@@ -75,3 +75,4 @@ CREATE TABLE "reposts"(
 
 ALTER TABLE "reposts" ADD CONSTRAINT "fk_user_id" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE;
 ALTER TABLE "reposts" ADD CONSTRAINT "fk_post_id" FOREIGN KEY ("post_id") REFERENCES "posts"("id") ON DELETE CASCADE;
+ALTER TABLE "reposts" ADD CONSTRAINT "unique_user_post" UNIQUE ("user_id", "post_id");
