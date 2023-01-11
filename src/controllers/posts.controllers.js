@@ -3,8 +3,10 @@ import getMetaData from "metadata-scraper";
 import postRepository from "../repositories/posts.repository.js";
 
 export async function getPosts(req, res) {
+  const { userId } = req.user;
+
   try {
-    const postsData = await postRepository.getPosts();
+    const postsData = await postRepository.getPosts(userId);
     const formattedData = await Promise.all(
       postsData.map(async (post) => {
         const metadata = await getMetaData(post.url);
@@ -55,12 +57,8 @@ export async function deletePost(req, res) {
 }
 
 export async function updatePost(req, res) {
-  const {
-    description,
-    removedHashtags,
-    newHashtags,
-    post_id } = req.body;
-  
+  const { description, removedHashtags, newHashtags, post_id } = req.body;
+
   try {
     await postRepository.deleteHashtags(removedHashtags, post_id);
     await postRepository.insertHashtags(newHashtags, post_id);
@@ -69,5 +67,5 @@ export async function updatePost(req, res) {
     return res.sendStatus(200);
   } catch (e) {
     return res.status(500).send(e);
-  };
-};
+  }
+}
