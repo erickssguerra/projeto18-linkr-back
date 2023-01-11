@@ -1,26 +1,29 @@
 import connectionDB from "../database/connectionDB.js";
 
-async function getPosts() {
+async function getPosts(userId) {
   const { rows } = await connectionDB.query(
     `SELECT
-        COALESCE (ARRAY_AGG( JSON_BUILD_OBJECT (
-            'user_name',  users2.name,
-            'user_id', users2.id
-            )) FILTER (WHERE users2.id IS NOT NULL), ARRAY[]::json[]) 
-            AS likes,
-        posts.id AS post_id,
-        posts.description,
-        posts.url,
-        users.name AS user,
-        users.id AS user_id,
-        users.picture_url AS "userImage"
-      FROM posts
-      JOIN users ON posts.user_id = users.id
-      LEFT JOIN likes ON posts.id = likes.post_id
-      LEFT JOIN users AS users2 ON users2.id = likes.user_id 
-      GROUP BY posts.id, users.name, users.picture_url, users.id
-      ORDER BY posts.created_at DESC
-      LIMIT 20;`
+      COALESCE (ARRAY_AGG( JSON_BUILD_OBJECT (
+          'user_name',  users2.name,
+          'user_id', users2.id
+          )) FILTER (WHERE users2.id IS NOT NULL), ARRAY[]::json[]) 
+          AS likes,
+      posts.id AS post_id,
+      posts.description,
+      posts.url,
+      users.name AS user,
+      users.id AS user_id,
+      users.picture_url AS "userImage"
+    FROM posts
+    JOIN users ON posts.user_id = users.id
+    LEFT JOIN likes ON posts.id = likes.post_id
+    LEFT JOIN users AS users2 ON users2.id = likes.user_id 
+    LEFT JOIN followers ON posts.user_id = followers.followed_id
+    WHERE followers.followed_id = users.id AND followers.user_id = $1
+    GROUP BY posts.id, users.name, users.picture_url, users.id
+    ORDER BY posts.created_at DESC
+    LIMIT 20;`,
+    [userId]
   );
 
   return rows;
