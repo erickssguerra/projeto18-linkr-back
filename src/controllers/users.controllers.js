@@ -64,13 +64,14 @@ export async function getPosts(req, res) {
 }
 
 export async function getUsers(req, res) {
-  const { string } = req.params;
-  
+  const { string } = res.locals.string;
+  const { userId } = req.user;
+
   try {
-    const users = await usersRepositories.selectUsersByString(string);
+    const users = await usersRepositories.selectUsersByString(string, userId);
 
     return res.status(200).send(users);
   } catch (e) {
     return res.status(500).send(e);
-  };
-};
+  }
+}

@@ -60,24 +60,27 @@ async function getPostsByUserId(user_id) {
   return rows;
 }
 
-async function selectUsersByString(string) {
+async function selectUsersByString(string, userId) {
   const { rows } = await connectionDB.query(
     `
     SELECT 
-      id,
-      "name",
-      picture_url
-    FROM
-      users
-    WHERE
-      "name"
-    ILIKE
-      $1
-    ORDER BY
-      "name"
-    LIMIT 10
+        users.id,
+        "name",
+        picture_url,
+        CASE WHEN EXISTS(SELECT * FROM followers WHERE followers.followed_id = users.id AND followers.user_id = $2) THEN true
+        ELSE false
+        END AS is_following
+      FROM users
+      LEFT JOIN followers ON users.id = followers.user_id
+      WHERE
+        "name"
+      ILIKE
+        $1
+      ORDER BY
+        is_following DESC
+      LIMIT 10;
     `,
-    [`%${string}%`]
+    [`%${string}%`, userId]
   );
 
   return rows;
