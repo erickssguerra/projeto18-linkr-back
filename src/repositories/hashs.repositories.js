@@ -17,6 +17,23 @@ async function getPostsByHashName(hash_name) {
             'user_id', users2.id
             )) FILTER (WHERE users2.id IS NOT NULL), ARRAY[]::json[]) 
             AS likes,
+        (
+          SELECT
+            COALESCE( JSON_AGG(comments_rows), '[]' )
+          FROM (
+            SELECT
+              c.user_id, c.comment,
+              u.name, u.picture_url
+            FROM
+              comments c
+            JOIN
+              users u
+            ON
+              c.user_id = u.id
+            WHERE
+              post_id = posts.id
+          ) AS comments_rows
+        ) AS comments,
         posts.id AS post_id,
         posts.description,
         posts.url,
