@@ -46,8 +46,16 @@ async function getPostsByUserId(user_id) {
             COALESCE( JSON_AGG(comments_rows), '[]' )
           FROM (
             SELECT
-              c.user_id, c.comment,
-              u.name, u.picture_url
+              c.user_id AS comment_author_id, c.comment,
+              u.name, u.picture_url,
+            ARRAY(
+              SELECT
+                f.user_id
+              FROM
+                followers f
+              WHERE
+                f.followed_id = c.user_id
+            ) AS followers
             FROM
               comments c
             JOIN
@@ -56,6 +64,8 @@ async function getPostsByUserId(user_id) {
               c.user_id = u.id
             WHERE
               post_id = posts.id
+            ORDER BY
+              c.created_at
           ) AS comments_rows
         ) AS comments,
         posts.id AS post_id,

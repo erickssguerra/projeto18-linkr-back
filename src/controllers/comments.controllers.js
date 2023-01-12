@@ -5,9 +5,22 @@ export async function postComment(req, res) {
 
   try {
     await commentsRepositories.postComment(user_id, post_id, comment);
-    return res.sendStatus(201);
+    const rows = await commentsRepositories.getComments(post_id);
+    return res.status(201).send(rows);
   } catch (err) {
     console.log(err);
     return res.status(500).send(err);
+  }
+}
+
+export async function getComments(req, res) {
+  const {post_id} = req.body;
+
+  try{
+    const rows = await commentsRepositories.getComments(post_id);
+    return res.send(rows);
+  } catch(err) {
+    console.log(err);
+    return res.sendStatus(500);
   }
 }
