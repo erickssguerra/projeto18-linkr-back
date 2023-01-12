@@ -19,7 +19,7 @@ async function getPosts(userId) {
     LEFT JOIN likes ON posts.id = likes.post_id
     LEFT JOIN users AS users2 ON users2.id = likes.user_id 
     LEFT JOIN followers ON posts.user_id = followers.followed_id
-    WHERE followers.followed_id = users.id AND followers.user_id = $1
+    WHERE followers.followed_id = users.id AND followers.user_id = $1 OR posts.user_id = $1
     GROUP BY posts.id, users.name, users.picture_url, users.id
     ORDER BY posts.created_at DESC
     LIMIT 20;`,
