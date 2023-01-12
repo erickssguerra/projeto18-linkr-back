@@ -63,15 +63,19 @@ async function getPostsByUserId(user_id) {
 async function selectUsersByString(string, userId) {
   const { rows } = await connectionDB.query(
     `
+    WITH users_table AS 
+    (SELECT users.id, 
+      EXISTS (SELECT * FROM followers 
+        WHERE followers.followed_id = users.id AND followers.user_id = $2) 
+      AS is_following FROM users)
     SELECT 
         users.id,
         "name",
-        picture_url,
-        CASE WHEN EXISTS(SELECT * FROM followers WHERE followers.followed_id = users.id AND followers.user_id = $2) THEN true
-        ELSE false
-        END AS is_following
-      FROM users
-      LEFT JOIN followers ON users.id = followers.user_id
+        picture_url, 
+        users_table.is_following
+       FROM
+        users
+      LEFT JOIN users_table ON users.id = users_table.id
       WHERE
         "name"
       ILIKE
