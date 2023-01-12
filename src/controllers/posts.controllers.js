@@ -24,6 +24,7 @@ export async function getPosts(req, res) {
 
     return res.status(200).send(formattedData);
   } catch (e) {
+    console.log(e);
     return res.sendStatus(500);
   }
 }
